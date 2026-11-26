@@ -1,7 +1,7 @@
 {
-    "versao":  "0.27.0",
-    "tag":  "51bb4655f53505522be3250c33948e274dc7301e",
-    "data":  "2026-11-26 18:37",
+    "versao":  "0.27.1",
+    "tag":  "c6c3fa99fe6399c116eee8cdb2ad8f42fd18e97a",
+    "data":  "2026-11-26 18:55",
     "arquivos":  [
                      {
                          "c":  "RE4CoopBR/Iniciar-Ponte.bat",
@@ -25,7 +25,7 @@
                      },
                      {
                          "c":  "reframework/autorun/re4coop_br.lua",
-                         "h":  "7de6f11ba9618cf44d9af9b194fbb714a36ed911ccb19ec5d124d139cfe416f4"
+                         "h":  "4ed8545cc0095508ee5939c087b8b3613f4f75e629b2f81644c127ce12f37398"
                      },
                      {
                          "c":  "reframework/data/RE4CoopBR/lang/en.json",
@@ -33,7 +33,7 @@
                      },
                      {
                          "c":  "reframework/plugins/re4coopbr_rede.dll",
-                         "h":  "b19398a9dfc42518550eb913784475306ebb9b4a45f37e3167ab0775081d7055"
+                         "h":  "5315b17e3bba89b7cbcc1da81aaa5d2dbc6b6b192900dbb96505e2d380d789d6"
                      }
                  ]
 }
