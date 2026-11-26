@@ -1,7 +1,7 @@
 {
-    "versao":  "0.27.1",
-    "tag":  "c6c3fa99fe6399c116eee8cdb2ad8f42fd18e97a",
-    "data":  "2026-11-26 18:55",
+    "versao":  "0.27.2",
+    "tag":  "23adc8cffe49635ebd0de54eede992e163578376",
+    "data":  "2026-11-26 19:17",
     "arquivos":  [
                      {
                          "c":  "RE4CoopBR/Iniciar-Ponte.bat",
@@ -9,7 +9,7 @@
                      },
                      {
                          "c":  "RE4CoopBR/LEIA-ME.txt",
-                         "h":  "55e21169ef685eb4544f4106cf18732a692804530ac28846c55204574488ab7c"
+                         "h":  "2353797d7457a91f97086f67f9f58ce06f152e1f55e67fc62c7a63205762f31e"
                      },
                      {
                          "c":  "RE4CoopBR/LICENSE.txt",
@@ -25,7 +25,7 @@
                      },
                      {
                          "c":  "reframework/autorun/re4coop_br.lua",
-                         "h":  "4ed8545cc0095508ee5939c087b8b3613f4f75e629b2f81644c127ce12f37398"
+                         "h":  "70cd889e7d9e59a4e847aafb356e457c0c2098759b6bad2858fd178c975b46dd"
                      },
                      {
                          "c":  "reframework/data/RE4CoopBR/lang/en.json",
