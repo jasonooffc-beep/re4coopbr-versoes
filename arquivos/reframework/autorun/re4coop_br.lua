@@ -15,10 +15,10 @@ e4coopbr_rede.dll: sala e convite da Steam, ou IP direto) e:
       out.json    -> Lua escreve: estado local (30x por segundo)
       in.json     <- plugin escreve: ultimo estado recebido do parceiro
       status.json <- plugin escreve: conexao, ping, sala Steam (membros, pronto, inicio), convites
-    (A ponte antiga RE4CoopBR\Iniciar-Ponte.bat ainda funciona no modo IP, sem o plugin.)
+    (A ponte antiga em PowerShell foi removida na v0.27.3: a rede e so pelo plugin.)
 ]]
 
-local VERSAO = "0.27.2"
+local VERSAO = "0.27.3"
 local PASTA = "RE4CoopBR/"
 local ARQ = {
     cfg = PASTA .. "config.json",
@@ -2689,7 +2689,7 @@ local function desenhar_hud()
     if not ponte_viva() then
         erro = true
         linha, cor = cfg.rede == "steam" and "Co-op: plugin de rede nao carregou (falta re4coopbr_rede.dll)"
-            or "Co-op: rede desligada (instale o plugin ou abra Iniciar-Ponte.bat)", COR.vermelho
+            or "Co-op: rede desligada (falta o plugin: extraia o pacote de novo)", COR.vermelho
     elseif parceiro_online() and parceiro.v ~= VERSAO then
         linha = string.format("Co-op: versoes diferentes! Voce v%s, parceiro v%s. Atualizem os dois.", VERSAO, tostring(parceiro.v))
         cor, erro = COR.vermelho, true
@@ -2738,7 +2738,7 @@ function linha_status()
             imgui.text("Falta reframework\\plugins\\re4coopbr_rede.dll (extraia o pacote de novo e reinicie o jogo).")
         else
             imgui.text_colored("Rede NAO esta rodando.", COR.vermelho)
-            imgui.text("Instale o plugin (reframework\\plugins\\re4coopbr_rede.dll) ou abra RE4CoopBR\\Iniciar-Ponte.bat.")
+            imgui.text("Falta reframework\\plugins\\re4coopbr_rede.dll (extraia o pacote de novo e reinicie o jogo).")
         end
     elseif cfg.rede == "steam" and not s.ok then
         imgui.text_colored("Aguardando a Steam...", COR.amarelo)

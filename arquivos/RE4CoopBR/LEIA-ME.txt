@@ -19,7 +19,7 @@ NOVO NA v0.23: IDIOMAS
   - Traducoes ficam em reframework\data\RE4CoopBR\lang (da para criar outras).
 
 NOVO NA v0.20: CONVITE PELA STEAM
-  - Nao precisa mais de IP nem da janela da ponte (Iniciar-Ponte.bat).
+  - Nao precisa de IP nem de abrir porta: a conexao e pelo convite da Steam.
   - Um plugin (reframework\plugins\re4coopbr_rede.dll) cria uma sala de
     amigos na Steam. O parceiro entra pelo convite da Steam ou clicando
     com o botao direito no amigo na Steam > "Entrar no jogo".
@@ -29,9 +29,9 @@ NOVO NA v0.20: CONVITE PELA STEAM
 
 INSTALACAO (uma vez, e a cada versao nova)
 ------------------------------------------
-  1. REFramework: o pacote "com-REFramework" ja traz o dinput8.dll (REFramework,
-     licenca MIT em RE4CoopBR\REFramework-LICENSE.txt). No pacote simples,
-     instale o REFramework antes (github.com/praydog/REFramework).
+  1. Instale o REFramework (obrigatorio): baixe o REFramework.zip em
+     https://github.com/praydog/REFramework-nightly/releases/latest
+     e coloque o dinput8.dll na pasta do jogo (onde fica o re4.exe).
   2. FECHE o jogo.
   3. Extraia o zip DENTRO da pasta do jogo (onde fica o re4.exe), substituindo tudo.
   4. Os DOIS jogadores precisam da mesma versao do mod.
