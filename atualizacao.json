@@ -1,23 +1,15 @@
 {
-    "versao":  "0.27.2",
-    "tag":  "23adc8cffe49635ebd0de54eede992e163578376",
-    "data":  "2026-11-26 19:17",
+    "versao":  "0.27.3",
+    "tag":  "37f49b0db90de92865680f219418bb3d5fbbb68a",
+    "data":  "2026-11-26 19:43",
     "arquivos":  [
                      {
-                         "c":  "RE4CoopBR/Iniciar-Ponte.bat",
-                         "h":  "f0175a29025ad0797fc28fb0b4320369b2093560898aea85366ed268b962f6f1"
-                     },
-                     {
                          "c":  "RE4CoopBR/LEIA-ME.txt",
-                         "h":  "2353797d7457a91f97086f67f9f58ce06f152e1f55e67fc62c7a63205762f31e"
+                         "h":  "ce40b9ed9793cc15e33df1e74eb934230aaaef83655969ed29e0a1bf40af84fc"
                      },
                      {
                          "c":  "RE4CoopBR/LICENSE.txt",
                          "h":  "d05731867a675226c5b3364df4d10bd7d1a7d3c58ce0b479684c0c9b015c9246"
-                     },
-                     {
-                         "c":  "RE4CoopBR/ponte.ps1",
-                         "h":  "02891f6f37577d0f4daa12bac55eeadd1a2deaf6af3efc4f0741d17ade07383f"
                      },
                      {
                          "c":  "RE4CoopBR/README.md",
@@ -25,11 +17,11 @@
                      },
                      {
                          "c":  "reframework/autorun/re4coop_br.lua",
-                         "h":  "70cd889e7d9e59a4e847aafb356e457c0c2098759b6bad2858fd178c975b46dd"
+                         "h":  "a8b15c566e62f5b6ba0046b01e065a791471d43f83c8cd08e6bfc96ad963f842"
                      },
                      {
                          "c":  "reframework/data/RE4CoopBR/lang/en.json",
-                         "h":  "043704f3538982405ab7fd96580edb7426c37286cc96bb739081368f88f04dc4"
+                         "h":  "12f7771fae42262ffa9218b36e659ca7141226ea7286805ec10efe8a41bf45cf"
                      },
                      {
                          "c":  "reframework/plugins/re4coopbr_rede.dll",
