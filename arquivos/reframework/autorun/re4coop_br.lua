@@ -18,7 +18,7 @@ e4coopbr_rede.dll: sala e convite da Steam, ou IP direto) e:
     (A ponte antiga RE4CoopBR\Iniciar-Ponte.bat ainda funciona no modo IP, sem o plugin.)
 ]]
 
-local VERSAO = "0.27.1"
+local VERSAO = "0.27.2"
 local PASTA = "RE4CoopBR/"
 local ARQ = {
     cfg = PASTA .. "config.json",

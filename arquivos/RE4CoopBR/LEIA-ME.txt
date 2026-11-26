@@ -29,10 +29,13 @@ NOVO NA v0.20: CONVITE PELA STEAM
 
 INSTALACAO (uma vez, e a cada versao nova)
 ------------------------------------------
-  1. Instale o REFramework (dinput8.dll na pasta do jogo) se ainda nao tiver.
+  1. REFramework: o pacote "com-REFramework" ja traz o dinput8.dll (REFramework,
+     licenca MIT em RE4CoopBR\REFramework-LICENSE.txt). No pacote simples,
+     instale o REFramework antes (github.com/praydog/REFramework).
   2. FECHE o jogo.
   3. Extraia o zip DENTRO da pasta do jogo (onde fica o re4.exe), substituindo tudo.
   4. Os DOIS jogadores precisam da mesma versao do mod.
+  5. Versoes novas: abra a aba JOGAR JUNTO e use "ATUALIZAR" (baixa sozinho).
 
 PARA JOGAR (toda vez)
 ---------------------
