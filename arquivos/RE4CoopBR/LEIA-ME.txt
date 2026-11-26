@@ -1,0 +1,77 @@
+RE4 Co-op BR  v0.26.4
+=====================
+
+Co-op para 2 jogadores no Resident Evil 4 Remake, cada um no seu PC.
+Cada um roda o proprio jogo (sem input lag); so a posicao/estado do
+parceiro trafega pela rede (30x por segundo, com suavizacao).
+
+NOVO NA v0.26: CENAS JUNTOS
+  - Quando o parceiro entra numa cena, aparece um aviso no topo da tela:
+    aperte F7 e a MESMA cena comeca no seu jogo (se estiver longe, vai ate ele antes).
+
+NOVO NA v0.25: ITENS-CHAVE COMPARTILHADOS
+  - Chave, engrenagem, item da historia: um pega, vale para os dois
+    (vai para o inventario de itens-chave do outro e some do mapa dele).
+
+NOVO NA v0.23: IDIOMAS
+  - O mod segue o idioma do jogo (portugues ou ingles).
+  - Para escolher: F8 > Conexao > "Idioma / Language".
+  - Traducoes ficam em reframework\data\RE4CoopBR\lang (da para criar outras).
+
+NOVO NA v0.20: CONVITE PELA STEAM
+  - Nao precisa mais de IP nem da janela da ponte (Iniciar-Ponte.bat).
+  - Um plugin (reframework\plugins\re4coopbr_rede.dll) cria uma sala de
+    amigos na Steam. O parceiro entra pelo convite da Steam ou clicando
+    com o botao direito no amigo na Steam > "Entrar no jogo".
+  - Funciona na mesma casa e pela internet (rede da Steam), sem abrir porta.
+  - Se cair ou o jogo fechar: abra o jogo de novo. O convidado volta sozinho
+    para a sala do anfitriao (se a sala dele estiver aberta).
+
+INSTALACAO (uma vez, e a cada versao nova)
+------------------------------------------
+  1. Instale o REFramework (dinput8.dll na pasta do jogo) se ainda nao tiver.
+  2. FECHE o jogo.
+  3. Extraia o zip DENTRO da pasta do jogo (onde fica o re4.exe), substituindo tudo.
+  4. Os DOIS jogadores precisam da mesma versao do mod.
+
+PARA JOGAR (toda vez)
+---------------------
+  1. Os dois abrem o jogo. No menu principal, logo abaixo de HISTORIA PRINCIPAL,
+     tem a opcao JOGAR JUNTO: ela abre a aba da sala (controle, teclado ou mouse;
+     Esc/voltar retorna ao menu).
+  2. Anfitriao: "Criar sala e convidar" -> escolhe o amigo na lista da Steam.
+  3. Convidado: aceita o convite (o jogo abre e entra sozinho na sala) e marca "Estou PRONTO".
+  4. Anfitriao escolhe "Novo jogo" (e a dificuldade) ou "Continuar (save co-op)" e
+     aperta INICIAR PARTIDA. A partida comeca SOZINHA nos dois jogos.
+
+SAVE CO-OP (slot 20)
+  - Sempre que um de voces salva (maquina de escrever ou salvamento automatico),
+    o mod grava tambem o "Espaco de Dados Salvos 20" NOS DOIS jogos.
+  - "Continuar (save co-op)" carrega esse slot nos dois PCs, no mesmo ponto da historia.
+  - Na sala aparece o save co-op de cada um, para conferir.
+  - Botao "Salvar ponto co-op agora" na tela da sala (com o jogo rolando).
+  - NAO use o slot 20 para saves normais seus: ele e do co-op.
+
+  Sem Steam / problemas com a Steam: F8 > Conexao > "IP direto (como antes)".
+
+TECLAS
+------
+  F8  abre/fecha o painel
+  F5  ir ate o parceiro (em outra area: ir ate a porta que ele usou)
+  F6  trazer o parceiro ate voce
+  F7  ir ver a cena junto com o parceiro (quando aparecer o aviso)
+
+TELEPORTE
+---------
+  - Desde a v0.24 o teleporte e SO pela tecla: F5 (ir ate o parceiro) e
+    F6 (trazer o parceiro). O automatico pode ser ligado em F8 > Opcoes.
+  - Parceiro passou por uma porta de carregamento: aparece o marcador
+    "Porta usada pelo parceiro". F5 te leva ate la.
+  - Configure em  F8 > Opcoes.
+
+LIMITACOES DESTA VERSAO
+-----------------------
+  - Pausar / abrir o inventario ainda pode dessincronizar por alguns segundos.
+  - Itens, gavetas, caixas e documentos NAO sincronizam (cada um pega o seu).
+  - Problemas? Veja F8 > Diagnostico, reframework\data\RE4CoopBR\rede.log
+    e o re2_framework_log.txt.

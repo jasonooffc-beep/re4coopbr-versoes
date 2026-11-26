@@ -1,0 +1,39 @@
+{
+    "versao":  "0.27.0",
+    "tag":  "v0.27.0",
+    "data":  "2026-11-26 18:36",
+    "arquivos":  [
+                     {
+                         "c":  "RE4CoopBR/Iniciar-Ponte.bat",
+                         "h":  "f0175a29025ad0797fc28fb0b4320369b2093560898aea85366ed268b962f6f1"
+                     },
+                     {
+                         "c":  "RE4CoopBR/LEIA-ME.txt",
+                         "h":  "55e21169ef685eb4544f4106cf18732a692804530ac28846c55204574488ab7c"
+                     },
+                     {
+                         "c":  "RE4CoopBR/LICENSE.txt",
+                         "h":  "d05731867a675226c5b3364df4d10bd7d1a7d3c58ce0b479684c0c9b015c9246"
+                     },
+                     {
+                         "c":  "RE4CoopBR/ponte.ps1",
+                         "h":  "02891f6f37577d0f4daa12bac55eeadd1a2deaf6af3efc4f0741d17ade07383f"
+                     },
+                     {
+                         "c":  "RE4CoopBR/README.md",
+                         "h":  "de50e3c98e722688417dd6ee546866cee970d28adb13eaaf6ee706d951016bcf"
+                     },
+                     {
+                         "c":  "reframework/autorun/re4coop_br.lua",
+                         "h":  "7de6f11ba9618cf44d9af9b194fbb714a36ed911ccb19ec5d124d139cfe416f4"
+                     },
+                     {
+                         "c":  "reframework/data/RE4CoopBR/lang/en.json",
+                         "h":  "043704f3538982405ab7fd96580edb7426c37286cc96bb739081368f88f04dc4"
+                     },
+                     {
+                         "c":  "reframework/plugins/re4coopbr_rede.dll",
+                         "h":  "b19398a9dfc42518550eb913784475306ebb9b4a45f37e3167ab0775081d7055"
+                     }
+                 ]
+}
