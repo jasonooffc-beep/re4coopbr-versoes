@@ -18,7 +18,7 @@ e4coopbr_rede.dll: sala e convite da Steam, ou IP direto) e:
     (A ponte antiga RE4CoopBR\Iniciar-Ponte.bat ainda funciona no modo IP, sem o plugin.)
 ]]
 
-local VERSAO = "0.27.0"
+local VERSAO = "0.27.1"
 local PASTA = "RE4CoopBR/"
 local ARQ = {
     cfg = PASTA .. "config.json",
@@ -4025,11 +4025,28 @@ re.on_frame(function()
             pcall(w.call, w, "requestLoadForPlay")
             pcall(w.call, w, "load")
             a.w = w
-            registrar("Assistindo a cena junto com o parceiro.")
+            a.criada = agora()
+            a.tent = (a.tent or 0) + 1
+            if a.tent == 1 then registrar("Assistindo a cena junto com o parceiro.") end
         end
         pcall(a.w.call, a.w, "onUpdate")
         if not a.tocou then
             local okl, carregada = pcall(a.w.call, a.w, "get_IsLoaded")
+            -- v0.27.1: as vezes o carregamento trava na fase Loading para sempre (visto com a cena 10154);
+            -- uma cena criada de novo carrega em ~2 s. Passou de 6 s: descarta e cria outra (ate 4 vezes).
+            if not (okl and carregada) and agora() - (a.criada or agora()) > 6 then
+                local fase = nil
+                pcall(function() fase = a.w:get_field("_EventPhase") end)
+                pcall(a.w.call, a.w, "unload")
+                if a.tent < 4 then
+                    registrar(string.format("Cena %s ainda carregando (fase %s): tentando de novo (%d).", tostring(a.id), tostring(fase), a.tent))
+                    a.w = nil
+                else
+                    registrar(string.format("Não consegui carregar a cena %s.", tostring(a.id)))
+                    Sala.assistir = nil
+                end
+                return
+            end
             if okl and carregada then
                 a.tocou = true
                 pcall(a.w.call, a.w, "play(via.GameObject, System.Action, System.Action, System.Boolean, System.Boolean)",
