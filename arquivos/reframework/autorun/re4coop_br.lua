@@ -18,7 +18,7 @@ e4coopbr_rede.dll: sala e convite da Steam, ou IP direto) e:
     (A ponte antiga em PowerShell foi removida na v0.27.3: a rede e so pelo plugin.)
 ]]
 
-local VERSAO = "0.27.3"
+local VERSAO = "0.28.0"
 local PASTA = "RE4CoopBR/"
 local ARQ = {
     cfg = PASTA .. "config.json",
@@ -1219,7 +1219,10 @@ do
     local nao_dar_ate = {} -- codigo -> nao entregar antes disso (evita vai-e-volta)
     local visto_desde = {} -- codigo -> desde quando esta carregado aqui
     local carregados_dele = {}  -- codigo -> true (lista "ec" do parceiro)
-    local TROCA_M, SEM_DADOS_S, CARENCIA_S = 3, 3, 1
+    -- v0.28: mais folga para trocar de dono (pela internet a troca vai-e-volta dava trancos)
+    local TROCA_M, SEM_DADOS_S, CARENCIA_S, SEGURA_S = 6, 3, 2, 4
+    local hist = {}        -- codigo -> amostras { t (relogio local), p, r, a } para interpolar
+    local jit = 0.03       -- atraso extra medido da rede (pacotes que chegam atrasados)
     Inimigos.meus, Inimigos.seguidos, Inimigos.entregues, Inimigos.ganhos = 0, 0, 0, 0
     Inimigos.trocas_anim, Inimigos.animados = 0, 0
 
@@ -1266,6 +1269,7 @@ do
         for cod in pairs(fsm_off) do religar_fsm(cod) end
         comps_anim = {}
         dono, dono_desde, nao_dar_ate, visto_desde, carregados_dele, alvos = {}, {}, {}, {}, {}, {}
+        hist = {}
     end
 
     local function dist(a, x, y, z)
@@ -1329,6 +1333,7 @@ do
                 elseif d_ele + TROCA_M < d_eu and carregados_dele[cod] and t >= (nao_dar_ate[cod] or 0)
                     and t - (dono_desde[cod] or 0) > CARENCIA_S then
                     mudar_dono(cod, "ele")
+                    nao_dar_ate[cod] = t + SEGURA_S
                     entregar[#entregar + 1] = cod
                 end
                 if dono_de(cod) == "eu" and math.min(d_eu, d_ele) < 60 and #plano < 14 * 24 then
@@ -1367,37 +1372,84 @@ do
     function Inimigos.receber_dono(lista)
         if type(lista) ~= "table" then return end
         for _, cod in ipairs(lista) do
-            if type(cod) == "number" then mudar_dono(cod, "eu") end
+            if type(cod) == "number" then
+                mudar_dono(cod, "eu")
+                nao_dar_ate[cod] = agora() + SEGURA_S   -- nao devolve logo em seguida
+            end
         end
         Inimigos.ganhos = Inimigos.ganhos + #lista
         Inimigos.ultimo = string.format("voce virou dono de %d inimigo(s) (esta mais perto)", #lista)
     end
 
     -- Guarda o ultimo alvo de cada inimigo que o parceiro manda, e o que ele tem carregado
-    function Inimigos.receber_posicoes(plano, ec)
+    -- v0.28: cada pacote vai para um historico com a hora de ENVIO (no relogio daqui); quem segue
+    -- desenha o inimigo um pouco no passado, entre dois pacotes (igual ao corpo do parceiro).
+    -- Antes ele corria atras do ultimo pacote: pela internet os pacotes chegam em rajadas = trancos.
+    function Inimigos.receber_posicoes(plano, ec, ts)
         local t = agora()
         if type(ec) == "table" then
             carregados_dele = {}
             for _, cod in ipairs(ec) do carregados_dele[cod] = true end
         end
         if type(plano) ~= "table" then return end
+        local tt = t
+        if type(ts) == "number" and offset_relogio then
+            tt = math.min(ts + offset_relogio, t)
+            -- quanto este pacote chegou atrasado: sobe rapido, desce devagar
+            local atraso = t - tt
+            if atraso > jit then jit = jit + (atraso - jit) * 0.3 else jit = jit + (atraso - jit) * 0.01 end
+        end
         for i = 1, #plano - 13, 14 do
             local cod = plano[i]
             -- Os dois acham que sao donos: o anfitriao fica (o convidado cede, passada a carencia)
             if dono_de(cod) == "eu" and papel() == "convidado" and t - (dono_desde[cod] or 0) > CARENCIA_S then
                 mudar_dono(cod, "ele")
             end
-            alvos[cod] = { p = { plano[i + 1], plano[i + 2], plano[i + 3] },
-                r = { plano[i + 4], plano[i + 5], plano[i + 6], plano[i + 7] }, t = t,
+            local am = { p = { plano[i + 1], plano[i + 2], plano[i + 3] },
+                r = { plano[i + 4], plano[i + 5], plano[i + 6], plano[i + 7] }, t = t, ts = tt,
                 a = { plano[i + 8], plano[i + 9], plano[i + 10], plano[i + 11], plano[i + 12], plano[i + 13] } }
+            alvos[cod] = am
+            local h = hist[cod]
+            if not h then h = {}; hist[cod] = h end
+            if not h[#h] or tt > h[#h].ts then h[#h + 1] = am end
+            while #h > 10 do table.remove(h, 1) end
         end
+    end
+
+    -- Onde o inimigo estava no instante tr (relogio daqui): interpola entre dois pacotes,
+    -- ou estica o ultimo movimento por ate 0,2 s se o proximo pacote ainda nao chegou
+    local function amostra_em(cod, tr)
+        local h = hist[cod]
+        if not h or #h == 0 then return nil end
+        if tr <= h[1].ts then return h[1].p, h[1].r, h[1], 0 end
+        for i = #h - 1, 1, -1 do
+            local a, b = h[i], h[i + 1]
+            if a.ts <= tr and tr <= b.ts then
+                local k = (tr - a.ts) / math.max(b.ts - a.ts, 1e-4)
+                -- pulo grande entre dois pacotes (o dono teletransportou o inimigo): sem deslizar
+                local salto = (b.p[1] - a.p[1]) ^ 2 + (b.p[2] - a.p[2]) ^ 2 + (b.p[3] - a.p[3]) ^ 2 > 16
+                if salto then return b.p, b.r, b, 0 end
+                return { a.p[1] + (b.p[1] - a.p[1]) * k, a.p[2] + (b.p[2] - a.p[2]) * k, a.p[3] + (b.p[3] - a.p[3]) * k },
+                    nlerp_quat(a.r, b.r, k), a, tr - a.ts
+            end
+        end
+        local b = h[#h]
+        local dt = math.min(tr - b.ts, 0.2)
+        local a = h[#h - 1]
+        if a and b.ts - a.ts > 1e-3 and b.ts - a.ts < 0.5 then
+            local inv = dt / (b.ts - a.ts)
+            return { b.p[1] + (b.p[1] - a.p[1]) * inv, b.p[2] + (b.p[2] - a.p[2]) * inv, b.p[3] + (b.p[3] - a.p[3]) * inv },
+                b.r, b, tr - b.ts
+        end
+        return b.p, b.r, b, tr - b.ts
     end
 
     -- A cada frame, nos inimigos do parceiro: aproxima suavemente; longe demais (> 4 m), teleporta
     local ultimo_frame = 0
 
     -- Toca no inimigo daqui a mesma animacao/quadro que o dono esta tocando
-    local function animar(cod, go, alvo, t)
+    -- (alvo = amostra do historico; passou = segundos desde ela, no tempo atrasado)
+    local function animar(cod, go, alvo, passou)
         local c = anim_de(cod, go)
         if not c.mot or not c.mc or not c.fsm then return false end
         if not fsm_off[cod] then
@@ -1414,7 +1466,7 @@ do
                         c.mc:call("changeMotion(System.Int32, System.UInt32, System.UInt32, System.Single)", li, b, m, 6.0)
                         Inimigos.trocas_anim = Inimigos.trocas_anim + 1
                     end
-                    local q = f + (t - alvo.t) * 60
+                    local q = f + passou * 60
                     local fim = L:call("get_EndFrame") or 0
                     if fim > 0 and q > fim then q = q % fim end
                     L:call("set_Frame", q)
@@ -1434,7 +1486,13 @@ do
             Inimigos.animados = 0
             return
         end
-        local k = 1 - math.exp(-dt * 12)
+        -- Desenha o inimigo "atrasado": um intervalo de envio (1/15 s) + o atraso medido da rede
+        local atraso = math.max(cfg.atraso_ms / 1000, 1 / 15 + jit + 0.03)
+        atraso = math.min(atraso, 0.35)
+        Inimigos.atraso_ms = math.floor(atraso * 1000)
+        local tr = t - atraso
+        -- So um residuo pequeno e suavizado (a interpolacao ja faz o grosso)
+        local k = 1 - math.exp(-dt * 30)
         local seguidos = 0
         local animados = {}
         local lista = tentar(personagens(), { "get_EnemyContextList" })
@@ -1447,20 +1505,24 @@ do
             local hpo = alvo and tentar(ctx, { "get_HitPoint" })
             local vo = hpo and vida(hpo)
             if vo and vo <= 0 then alvo = nil end
-            if alvo and t - alvo.t < 0.6 then
+            -- v0.28: segura ate 1,5 s sem pacote (antes 0,6 s: num soluco da internet o inimigo
+            -- voltava a andar sozinho e depois levava um puxao)
+            if alvo and t - alvo.t < 1.5 then
                 local go = tentar(ctx, { "get_BodyGameObject" })
                 local p = go and ler_transform(go)
-                if p then
-                    local a = alvo.p
+                local a, rot, am, passou = amostra_em(cod, tr)
+                if p and a then
                     local d2 = (a[1] - p.x) ^ 2 + (a[2] - p.y) ^ 2 + (a[3] - p.z) ^ 2
                     if d2 > 16 then
-                        mover_go(go, a[1], a[2], a[3], alvo.r)
-                    elseif d2 > 0.0004 then
-                        mover_go(go, p.x + (a[1] - p.x) * k, p.y + (a[2] - p.y) * k, p.z + (a[3] - p.z) * k, alvo.r)
+                        mover_go(go, a[1], a[2], a[3], rot)
+                    elseif d2 > 0.0001 then
+                        mover_go(go, p.x + (a[1] - p.x) * k, p.y + (a[2] - p.y) * k, p.z + (a[3] - p.z) * k, rot)
+                    elseif rot then
+                        mover_go(go, p.x, p.y, p.z, rot)
                     end
                     seguidos = seguidos + 1
-                    if cfg.inimigos_animacao and alvo.a then
-                        local oka, r = pcall(animar, cod, go, alvo, t)
+                    if cfg.inimigos_animacao and am.a then
+                        local oka, r = pcall(animar, cod, go, am, passou)
                         if oka and r then animados[cod] = true end
                         if not oka then Inimigos.ultimo = "erro animacao: " .. tostring(r) end
                     end
@@ -1898,7 +1960,7 @@ local function ler_ponte()
         end
     end
     if type(st.am) == "string" then mascaras_parceiro = st.am end
-    if st.en or st.ec then pcall(Inimigos.receber_posicoes, st.en, st.ec) end
+    if st.en or st.ec then pcall(Inimigos.receber_posicoes, st.en, st.ec, st.t) end
     -- Disparos: compara a contagem de cada arma com a ultima vista
     if type(st.tc) == "string" then
         local i = 0
@@ -3755,7 +3817,8 @@ local function aba_opcoes()
     if c then salvar_cfg() end
     c, cfg.inimigos_animacao = imgui.checkbox("Inimigos com a mesma animacao (experimental)", cfg.inimigos_animacao)
     if c then salvar_cfg() end
-    imgui.text(string.format("Animados agora: %d  |  trocas de animacao: %d", Inimigos.animados or 0, Inimigos.trocas_anim or 0))
+    imgui.text(string.format("Animados agora: %d  |  trocas de animacao: %d  |  atraso usado: %d ms", Inimigos.animados or 0,
+        Inimigos.trocas_anim or 0, Inimigos.atraso_ms or 0))
     imgui.text(string.format("Inimigos carregados: %d  |  danos enviados: %d  |  recebidos: %d  |  aguardando: %d",
         Inimigos.vistos, Inimigos.enviados, Inimigos.recebidos, Inimigos.pendentes))
     imgui.text(string.format("Seus (voce manda): %d  |  do parceiro (seguindo): %d  |  entregues: %d  |  recebidos: %d",
