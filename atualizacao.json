@@ -1,7 +1,7 @@
 {
-    "versao":  "0.27.3",
-    "tag":  "37f49b0db90de92865680f219418bb3d5fbbb68a",
-    "data":  "2026-11-26 19:43",
+    "versao":  "0.28.0",
+    "tag":  "65d0186992384ac04ab718eb41976755f710ec02",
+    "data":  "2026-11-26 21:54",
     "arquivos":  [
                      {
                          "c":  "RE4CoopBR/LEIA-ME.txt",
@@ -17,7 +17,7 @@
                      },
                      {
                          "c":  "reframework/autorun/re4coop_br.lua",
-                         "h":  "a8b15c566e62f5b6ba0046b01e065a791471d43f83c8cd08e6bfc96ad963f842"
+                         "h":  "fb8ce2db772cf103042b2ffbd7e87fc0af544052be08a515303236d790a7949d"
                      },
                      {
                          "c":  "reframework/data/RE4CoopBR/lang/en.json",
